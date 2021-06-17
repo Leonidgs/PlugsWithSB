@@ -11,14 +11,17 @@ public class PetModel implements Serializable {
     private final Map<Integer, Pet> model;
 
     public PetModel() {
+
         model = new HashMap<Integer, Pet>();
     }
 
     public static PetModel getInstance() {
+
         return instance;
     }
 
     public void add(Pet pet, int id) {
+
         model.put(id, pet);
     }
 
@@ -27,6 +30,17 @@ public class PetModel implements Serializable {
     }
 
     public Map<Integer, Pet> getAll() {
+
         return model;
+    }
+
+    public Pet deletePet(int id) {
+
+        return model.remove(id);
+    }
+
+    public void changePet(Pet pet, int id) {
+
+        model.put(id, pet);
     }
 }
