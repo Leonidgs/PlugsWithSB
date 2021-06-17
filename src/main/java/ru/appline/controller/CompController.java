@@ -31,9 +31,15 @@ public class CompController {
     }
 
     @GetMapping(value = "/getResult", consumes = "application/json", produces = "application/json")
-    public Result som1(@RequestBody Degree degree) {
+    public Object som1(@RequestBody Degree degree) {
 
         int grad = degree.getDegree();
+        if (grad < 0 || grad > 360) {
+            String bad = "BadRequest";
+            Object obj = bad;
+            return bad;
+        }
+
         for(Map.Entry entry : map.entrySet()) {
             System.out.println(entry.getKey());
             System.out.println(entry.getValue());
