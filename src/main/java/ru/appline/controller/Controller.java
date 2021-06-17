@@ -1,9 +1,6 @@
 package ru.appline.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.appline.logic.Pet;
 import ru.appline.logic.PetModel;
 
@@ -18,11 +15,10 @@ public class Controller {
 
     @PostMapping(value = "/createPet", consumes = "application/json")
     public String createPet(@RequestBody Pet pet) {
-        if(newId.getAndIncrement() == 1) {
+        if(newId.get() == 1) {
             petModel.add(pet, newId.getAndIncrement());
             return "Поздравляем! Вы завели своё первое домашнее животное! Не забывайте вкусно кормить и гладить!";
-        }
-        else {
+        } else {
             petModel.add(pet, newId.getAndIncrement());
             return "Поздравляем с новым питомцем!";
         }
@@ -30,11 +26,31 @@ public class Controller {
 
     @GetMapping(value = "/getAll", produces = "application/json")
     public Map<Integer, Pet> getAll() {
+
         return petModel.getAll();
     }
 
     @GetMapping(value = "/getPet", consumes = "application/json", produces = "application/json")
     public Pet getPet(@RequestBody Map<String, Integer> id) {
+
         return petModel.getFromList(id.get("id"));
+    }
+
+    @DeleteMapping(value = "/delete", consumes = "application/json")
+    public String delete(@RequestBody Map<String, Integer> id) {
+        petModel.deletePet(id.get("id"));
+        return "Питомец с id " + id + " успешно удалён";
+    }
+
+    @PutMapping(value = "/change", consumes = "application/json")
+    public Pet change(@RequestBody Map<String, Object> fakeObj) {
+
+        Pet pet = new Pet(fakeObj.get("name").toString(), fakeObj.get("type").toString(),
+                Integer.parseInt(fakeObj.get("age").toString()));
+
+        petModel.changePet(pet, Integer.parseInt(fakeObj.get("id").toString()));
+
+        return petModel.getFromList(Integer.parseInt(fakeObj.get("id").toString()));
+
     }
 }
