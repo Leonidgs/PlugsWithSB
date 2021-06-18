@@ -31,42 +31,39 @@ public class CompController {
     }
 
     @GetMapping(value = "/getResult", consumes = "application/json", produces = "application/json")
-    public Object som1(@RequestBody Degree degree) {
+    public Result som1(@RequestBody Degree degree) {
 
         int grad = degree.getDegree();
-        if (grad < 0 || grad > 360) {
-            String bad = "BadRequest";
-            Object obj = bad;
-            return bad;
-        }
 
-        for(Map.Entry entry : map.entrySet()) {
-            System.out.println(entry.getKey());
-            System.out.println(entry.getValue());
-            ArrayList<Integer> ok = new ArrayList();
+        if (grad >=0 && grad <= 360) {
+            for (Map.Entry entry : map.entrySet()) {
+                System.out.println(entry.getKey());
+                System.out.println(entry.getValue());
+                ArrayList<Integer> ok = new ArrayList();
 
-            String[] num = map.get(entry.getKey()).split("-");
+                String[] num = map.get(entry.getKey()).split("-");
 
-            for (String n : num) {
-                ok.add(Integer.parseInt(n));
-            }
-            int a = ok.get(0);
-            int b = ok.get(1);
-            if (a < b) {
-                if (grad >= a && grad <= 360 && grad <= b) {
-                    res.setSide(entry.getKey().toString());
-                    return res;
+                for (String n : num) {
+                    ok.add(Integer.parseInt(n));
                 }
-            }else if (a > b) {
-                if (grad >= a && grad <= 360 && grad >= b) {
-                    res.setSide(entry.getKey().toString());
-                    return res;
-                } else if (grad <= a && grad <= 360 && grad <= b) {
-                    res.setSide(entry.getKey().toString());
-                    return res;
+                int a = ok.get(0);
+                int b = ok.get(1);
+                if (a < b) {
+                    if (grad >= a && grad <= 360 && grad <= b) {
+                        res.setSide(entry.getKey().toString());
+                        return res;
+                    }
+                } else if (a > b) {
+                    if (grad >= a && grad <= 360 && grad >= b) {
+                        res.setSide(entry.getKey().toString());
+                        return res;
+                    } else if (grad <= a && grad <= 360 && grad <= b) {
+                        res.setSide(entry.getKey().toString());
+                        return res;
+                    }
                 }
             }
         }
-        return res;
+        return null;
     }
 }
