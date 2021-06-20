@@ -38,19 +38,23 @@ public class Controller {
 
     @DeleteMapping(value = "/delete", consumes = "application/json")
     public String delete(@RequestBody Map<String, Integer> id) {
-        petModel.deletePet(id.get("id"));
-        return "Питомец с id " + id + " успешно удалён";
+        if (petModel.getAll().containsKey(id.get("id"))) {
+            petModel.deletePet(id.get("id"));
+            return "Питомец с id " + id + " успешно удалён";
+        }
+        return "Питомца с таким ID - не существует";
     }
 
     @PutMapping(value = "/change", consumes = "application/json")
     public Pet change(@RequestBody Map<String, Object> fakeObj) {
 
-        Pet pet = new Pet(fakeObj.get("name").toString(), fakeObj.get("type").toString(),
-                Integer.parseInt(fakeObj.get("age").toString()));
+        if (petModel.getAll().containsKey(fakeObj.get("id"))) {
+            Pet pet = new Pet(fakeObj.get("name").toString(), fakeObj.get("type").toString(),
+                    Integer.parseInt(fakeObj.get("age").toString()));
 
-        petModel.changePet(pet, Integer.parseInt(fakeObj.get("id").toString()));
-
-        return petModel.getFromList(Integer.parseInt(fakeObj.get("id").toString()));
-
+            petModel.changePet(pet, Integer.parseInt(fakeObj.get("id").toString()));
+            return petModel.getFromList(Integer.parseInt(fakeObj.get("id").toString()));
+        }
+        return null;
     }
 }
